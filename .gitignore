@@ -2,6 +2,6 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/SC82U3/azuredeploy.parameters_slot.json
-/SC82U3/azuredeploy.parameters.json
+/SC82U3_XP/azuredeploy.parameters_slot.json
+/SC82U3_XP/azuredeploy.parameters.json
 .vs/
