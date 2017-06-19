@@ -6,49 +6,49 @@
       "value": "sc82u3-launch1"
     },
     "cmMsDeployPackageUrl": {
-      "value": "https://ctsitecorepackages.blob.core.windows.net/sitecore82u3/Sitecore%208.2%20rev.%20170407_cm.scwdp.zip?st=2017-06-06T14%3A41%3A00Z&se=2017-08-31T14%3A41%3A00Z&sp=rl&sv=2015-12-11&sr=c&sig=Q0TTy85FNwerO6oCoM5As2i7WjN2eL7B%2B12RJLFuVPQ%3D"
+      "value": "..."
     },
     "cdMsDeployPackageUrl": {
-      "value": "https://ctsitecorepackages.blob.core.windows.net/sitecore82u3/Sitecore%208.2%20rev.%20170407_cd.scwdp.zip?st=2017-06-06T14%3A41%3A00Z&se=2017-08-31T14%3A41%3A00Z&sp=rl&sv=2015-12-11&sr=c&sig=Q0TTy85FNwerO6oCoM5As2i7WjN2eL7B%2B12RJLFuVPQ%3D"
+      "value": "..."
     },
     "cddeployMsDeployPackageUrl": {
-      "value": "https://ctsitecorepackages.blob.core.windows.net/sitecore82u3/Sitecore%208.2%20rev.%20170407_cd-nodb.scwdp.zip?st=2017-06-06T14%3A41%3A00Z&se=2017-08-31T14%3A41%3A00Z&sp=rl&sv=2015-12-11&sr=c&sig=Q0TTy85FNwerO6oCoM5As2i7WjN2eL7B%2B12RJLFuVPQ%3D"
+      "value": "..."
     },
     "prcMsDeployPackageUrl": {
-      "value": "https://ctsitecorepackages.blob.core.windows.net/sitecore82u3/Sitecore%208.2%20rev.%20170407_prc.scwdp.zip?st=2017-06-06T14%3A41%3A00Z&se=2017-08-31T14%3A41%3A00Z&sp=rl&sv=2015-12-11&sr=c&sig=Q0TTy85FNwerO6oCoM5As2i7WjN2eL7B%2B12RJLFuVPQ%3D"
+      "value": "..."
     },
     "repMsDeployPackageUrl": {
-      "value": "https://ctsitecorepackages.blob.core.windows.net/sitecore82u3/Sitecore%208.2%20rev.%20170407_rep.scwdp.zip?st=2017-06-06T14%3A41%3A00Z&se=2017-08-31T14%3A41%3A00Z&sp=rl&sv=2015-12-11&sr=c&sig=Q0TTy85FNwerO6oCoM5As2i7WjN2eL7B%2B12RJLFuVPQ%3D"
+      "value": "..."
     },
     "sqlServerLogin": {
       "value": "sc823User"
     },
     "sqlServerPassword": {
-      "value": "sc823P@ssword"
+      "value": "..."
     },
     "sitecoreAdminPassword": {
-      "value": "scAdminP@ssWord"
+      "value": "..."
     },
     "repAuthenticationApiKey": {
-      "value": "753D91D950D64CB0BCBF4E5678DDEB56"
+      "value": "..."
     },
     "analyticsMongoDbConnectionString": {
-      "value": "mongodb://sitecore82u3_cloud:S1teC0re@ds028310.mlab.com:28310/sitecore82u3_launch_analytics"
+      "value": "..."
     },
     "trackingLiveMongoDbConnectionString": {
-      "value": "mongodb://sitecore82u3_cloud:S1teC0re@ds028310.mlab.com:28310/sitecore82u3_launch_live"
+      "value": "..."
     },
     "trackingHistoryMongoDbConnectionString": {
-      "value": "mongodb://sitecore82u3_cloud:S1teC0re@ds028310.mlab.com:28310/sitecore82u3_launch_tracking_history"
+      "value": "..."
     },
     "trackingContactMongoDbConnectionString": {
-      "value": "mongodb://sitecore82u3_cloud:S1teC0re@ds028310.mlab.com:28310/sitecore82u3_launch_tracking_contact"
+      "value": "..."
     },
     "sqlServerFqdn": {
-      "value": "sc82u3-launch1-sql.database.windows.net"
+      "value": "..."
     },
     "webSqlServerFqdn": {
-      "value": "sc82u3-launch1-sql.database.windows.net"
+      "value": "..."
     },
     "licenseXml": {
       "value": ""
@@ -58,23 +58,23 @@
         "items": [
           {
             "name": "bootloader",
-            "templateLink": "https://ctsitecorepackages.blob.core.windows.net/sitecore/BootLoader/bootloader_cdslot.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/BootLoader/bootloader.json",
             "parameters": {
-              "msDeployPackageUrl": "https://ctsitecorepackages.blob.core.windows.net/sitecore/BootLoader/Sitecore.Cloud.Integration.Bootload.wdp.zip"
+              "msDeployPackageUrl": "https://????.blob.core.windows.net/sitecore82u3/Sitecore.Cloud.Integration.Bootload.wdp.zip?[shared access signature]"
             }
           },
           {
             "name": "sitecore-package-deployer",
-            "templateLink": "https://ctsitecorepackages.blob.core.windows.net/sitecore/SitecorePackageDeployer/SitecorePackageDeployer.azuredeploy_cdslot.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/SitecorePackageDeployer/SitecorePackageDeployer.azuredeploy.json",
             "parameters": {
-              "msDeployPackageUrl": "https://ctsitecorepackages.blob.core.windows.net/sitecore/SitecorePackageDeployer/SitecorePackageDeployer-1.8.scwdp.zip"
+              "msDeployPackageUrl": "https://????.blob.core.windows.net/sitecore/SitecorePackageDeployer/SitecorePackageDeployer-1.8.scwdp.zip"
             }
           },
           {
             "name": "launch-sitecore",
-            "templateLink": "https://ctsitecorepackages.blob.core.windows.net/sitecore/xp_slot/addons/InstallMSDeployPackage.azuredeploy_cdslot.json",
+            "templateLink": "...",
             "parameters": {
-              "msDeployPackageUrl": "https://ctsitecorepackages.blob.core.windows.net/sitecore/LaunchSitecore/Release1.3.zip"
+              "msDeployPackageUrl": "..."
             }
           }
         ]
