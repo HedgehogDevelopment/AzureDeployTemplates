@@ -58,7 +58,7 @@
         "items": [
           {
             "name": "bootloader",
-            "templateLink": "https://????.blob.core.windows.net/sitecore/BootLoader/bootloader.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/xp/addons/bootloader.json",
             "parameters": {
               "msDeployPackageUrl": "https://????.blob.core.windows.net/sitecore82u3/Sitecore.Cloud.Integration.Bootload.wdp.zip?[shared access signature]"
             }
