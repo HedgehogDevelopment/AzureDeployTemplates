@@ -5,4 +5,6 @@
 /SC82U3_XP/azuredeploy.parameters_slot.json
 /SC82U3_XP/azuredeploy.parameters.json
 /SC82U3_XP/Install.ps1
+/SC82U3_XP/ShrinkPlan.ps1
+/SC82U3_XP/ProvisionAndDeploySlot.ps1
 .vs/
