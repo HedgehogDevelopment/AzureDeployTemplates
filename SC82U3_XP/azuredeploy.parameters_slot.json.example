@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "deploymentId": {
-      "value": "sc82u3-launch1"
+      "value": "...."
     },
     "cmMsDeployPackageUrl": {
       "value": "..."

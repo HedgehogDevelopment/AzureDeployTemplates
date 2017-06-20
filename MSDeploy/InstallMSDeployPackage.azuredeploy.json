@@ -59,7 +59,7 @@
           {
             "packageUri": "[parameters('msDeployPackageUrl')]",
             "setParameters": {
-              "Application Path": "[variables('cmWebAppNameTidy')]"
+              "IIS Web Application Name": "[variables('cmWebAppNameTidy')]"
             }
           }
         ]
@@ -75,7 +75,7 @@
           {
             "packageUri": "[parameters('msDeployPackageUrl')]",
             "setParameters": {
-              "Application Path": "[variables('cdWebAppNameTidy')]"
+              "IIS Web Application Name": "[variables('cdWebAppNameTidy')]"
             }
           }
         ]
