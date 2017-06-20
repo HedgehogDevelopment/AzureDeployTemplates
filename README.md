@@ -79,7 +79,7 @@ The next step is to install the Sitecore Package Deployer into your Sitecore env
         "items": [
           {
             "name": "bootloader",
-            "templateLink": "https://????.blob.core.windows.net/sitecore/BootLoader/bootloader.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/xp/addons/bootloader.json",
             "parameters": {
               "msDeployPackageUrl": "https://????.blob.core.windows.net/sitecore82u3/Sitecore.Cloud.Integration.Bootload.wdp.zip?[shared access signature]"
             }
@@ -126,7 +126,7 @@ The deploy script needs to be configured to deploy the MSDeploy package into the
         "items": [
           {
             "name": "bootloader",
-            "templateLink": "https://????.blob.core.windows.net/sitecore/BootLoader/bootloader.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/xp/addons/bootloader.json",
             "parameters": {
               "msDeployPackageUrl": "https://????.blob.core.windows.net/sitecore82u3/Sitecore.Cloud.Integration.Bootload.wdp.zip?[shared access signature]"
             }
@@ -166,5 +166,14 @@ At this point, the slot deployment scripts can be setup. The following tasks nee
 - Setup a powershell script to run the deployment
 
 ### Setting up blob storage
-The 
+Setting up the scripts for a slot deployment is similar to the setup shown above. A folder in the public "sitecore" blob continer called xp_slot needs to be created. This will contain the same files as the 'xp' folder from above. These files were obtained from [Sitecore-Azure-Quickstart-Templates](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates).
+
+The additional files needed for the slot deployment are located in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates) under SC82U3_XP_SlotDeploy. The file **StagingSlot.json** should be uploaded into the folder **xp_slot**. The file **bootloader_cdslot.json** should be uploaded to the **xp_slot/addons** folder.
+
+### Configuring the deployment parameters
+Using the file **azuredeploy.parameters_slot.json.example** as a starting point for creating the **azuredeploy.parameters_slot.json** file will make configuring the deployment much easier. Most of the settings should be the same as the settings in the **azuredeploy.parameters.json** file. The notable differences are the paths to the modules and the additional settings for the web and master database servers.
+
+### The Powershell
+
+
 

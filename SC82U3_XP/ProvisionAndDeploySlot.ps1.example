@@ -1,0 +1,12 @@
+﻿#Import the stuff we need 
+Import-Module AzureRM
+
+#Point to the sitecore cloud tools on your local filesystem
+Import-Module c:\temp\SitecoreAzure\Tools\Sitecore.Cloud.Cmdlets.psm1
+
+#Add the azure account
+Add-AzureRmAccount
+
+$Name="sc82u3-launch"
+
+Start-SitecoreAzureDeployment -Location "East US" -Name $Name -ArmTemplateUrl "https://ctsitecorepackages.blob.core.windows.net/sitecore/xp_slot/StagingSlot.json" -ArmParametersPath ".\azuredeploy.parameters_slot.json" -LicenseXmlPath "C:\Charlie\Installs\Sitecore\license.xml" -Verbose
