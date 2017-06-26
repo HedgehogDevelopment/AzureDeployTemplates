@@ -1,11 +1,11 @@
 # Azure Deploy Templates
-The files in this repository are used to deploy Launch Sitecore to an Azure XP deployment using Sitecore 8.2 Update 3. I would like to thank [Rob Habraken](https://www.robhabraken.nl/) for his excellent articles, samples and tools for Sitecore Azure Deployments. His articles were a big in help building these scripts.
+The files in this repository are used to deploy Launch Sitecore to an Azure XP environment using Sitecore 8.2 Update 3. I would like to thank [Rob Habraken](https://www.robhabraken.nl/) for his excellent articles, samples and tools for Sitecore Azure Deployments. His articles were a big help building these scripts.
 
 # Launch Sitecore in an Azure XP cloud deployment
 
-The Launch Sitecore site is a good starting place for testing Sitecore deployments. It is a fairly simple site that demonstrates many different sitecore features. This makes it ideal for a test environment.
+The Launch Sitecore site is a good starting point for testing Sitecore deployments. It is a fairly simple site that demonstrates many different sitecore features. This makes it ideal for a test environment.
 
-In this post, I will document the steps taken to deploy Launch Sitecore into the Sitecore Azure XP Environment. I will also show how to setup the CD using Blue/Green code deployments. Other servers could be deployed this way if needed.
+In this post, I will document the steps taken to deploy Launch Sitecore into the Sitecore Azure XP Environment. I will also show how to setup the CD using Blue/Green code deployments. Other servers in the environment could be deployed this way if needed.
 
 ## The Tools
 The list of tools was chosen to keep the environment as simple as possible. These tools are standard in most Sitecore development environments
@@ -22,20 +22,20 @@ The list of tools was chosen to keep the environment as simple as possible. Thes
 The first step is to actually build Launch Sitecore on a build server. We want to build an MSDeploy package for code and a Sitecore Update Package for the Launch Sitecore items.
 
 ### Creating the projects
-To start, we setup Launch Sitecore in a local development environment. The files in the the VS solution were added to a VSO project and two TDS classic projects were added to the soltuion. One for the Core database and one for Master.
+A local development environment for Launch Sitecore needs t obe built. The files in the the VS solution were added to a VSO project and two TDS Classic projects were added to the soltuion. One for the Core database and one for Master.
 
-The items in the Launch Sitecore package were added to the TDS projects and everything was commited to source control.
+The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository.
 
 The LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core project into a single update package. The Release configuration was setup to generate only an item package at build time.
 
 ### Creating the build
 The VS build was easy to setup with minimal customizations. The first step was to choose an Azure Web App build:
 
-![Create build template](./images/CreateVsBuildtemplate.png)
+![Create build template](../../images/CreateVsBuildtemplate.png)
 
 Next, the build was customized by disabling the azure deploy and test tasks:
 
-![Build settings](./images/VsBuildSettings.png)
+![Build settings](/images/VsBuildSettings.png)
 
 The Azure Deploy task was disabled since we don't want to deploy directly to Azure and the Test task was disabled because we don't have any tests at this time.
 
