@@ -41,7 +41,7 @@ The Azure Deploy task was disabled since we don't want to deploy directly to Azu
 
 Since the build is creating Sitecore Update Packages, these packages need to be added to the build artifacts. This is done with the "Copy Packages to Artifacts" copy task. The configuration for this is:
 
-![Copy Package Settings](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/VsBuildCopyPackages.png?raw=true)
+![Copy Package Settings](./Images/VsBuildCopyPackages.png?raw=true)
 
 The last step is to run the build. The build artifacts will be used later.
 
@@ -54,35 +54,35 @@ The Sitecore Azure packages and Azure templates need to be stored in an online b
 #### Sitecore Components ####
 The first set of files to upload to blob storage are the Sitecore deployment files. These should be located in a single folder. I called my storage container **sitecore82u3**:
 
-![Sitecore assets](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/SitecoreAssets.png?raw=true)
+![Sitecore assets](./Images/SitecoreAssets.png?raw=true)
 
 These files can be downloaded from http://dev.sitecore.net. The **Sitecore.Cloud.Integration.Bootload.wdp.zip** file was obtained from the Sitecore GitHub mentioned in this article: [Configure the Bootloader module for a Sitecore deployment ](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/configuring/configure_the_bootloader_module_for_a_sitecore_deployment).
 
 The **Sitecore 8.2 rev. 170407_cd-nodb.scwdp.zip** was obtained by following the directions on Rob's excellent blog post [Blue Green Sitecore Deployments on Azure](https://www.robhabraken.nl/index.php/2740/blue-green-sitecore-deployments-on-azure/). Please see the section toward the bottom entitled **Databaseless SCWDPs**.
 
-These files contain the full Sitecore installations, and should be stored in a non-public blob. This means you will have to use the Azure Storage Explorer to create a shared access signature for each file.
+These files contain the full Sitecore installations, and should be stored in a non-public blob. This means you will have to use the Azure Storage Explorer to create a shared access signature for each file. The full URL's for each file with the shared access signature should be added to the appropriate location in your **azuredeploy.parameters.json** file. An example file is included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates).
 
 #### Deployment Scripts ####
-One of the problems we ran into building our deployments for Sitecore 8.2 update 3 was that the scripts needed to be referenced via a URL instead of the local file system. The 8.2 update 1 scripts worked fine if they were on the local file system.
+One of the problems we ran into building our deployments for Sitecore 8.2 update 3 was that the scripts and templates needed to be referenced via a URL instead of the local file system. The 8.2 update 1 scripts worked fine if they were on the local file system, but the update 3 scripts did not.
 
-This initially caused us problems because certain scripts needed to be stored in specific folders relative to other scripts and the shared access token got in the way of constructing the urls. Our solution to this was to create a public blob storage container called **sitecore** and store all of our scripts in there. Since it was public, no shared access signature was needed and everything worked correctly.
+This initially caused us problems because certain scripts needed to be stored in specific folders relative to other scripts and the shared access token got in the way of constructing the urls. Our solution to this was to create a public blob storage container called **sitecore** and store all of our scripts in there. Since it was public, no shared access token was needed and everything worked correctly.
 
-We have provided some custom scripts that need to be pushed into the **sitecore** blob storage container along with the scripts that are part of the Sitecore Azure Toolkit.
+Adding blue/green code deployments to the Sitecore Azure Templates required some additional scripts that also need to be stored in the same folder structure as the Sitecore supplied templates. These scripts need to be stored in specific locations relative to the Sitecore Azure Templates. Please follow the steps outlined below very carefully to ensure the scripts work correctly.
 
-The first step is to create the sitecore folder in blob storage and upload the blob scripts from our Git repository:
+The first step is to create the **sitecore** container in blob storage and upload the blob scripts from our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates) repository:
 
-![Upload Scripts](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
+![Upload Scripts](./Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
 
 This will upload our scripts into blob storage.
 
 Next, The Sitecore Azure toolkit needs to be uploaded into the same storage area. You can obtain the Sitecore toolkit deployment scripts from Sitecore's Git Repository at: [Sitecore-Azure-Quickstart-Templates](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates). These scripts are uploaded into the **sitecore** Blob Container into a folder called **xp**. Everything in the /Sitecore 8.2.3/xp folder should be uploaded to the **xp** folder.
 
-![Upload Azure Templates](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/UploadAzureTemplatestoBlobStorage.png?raw=true)
+![Upload Azure Templates](./Images/UploadAzureTemplatestoBlobStorage.png?raw=true)
 
 This should be everything you need to install the default XP instance in Sitecore Azure.
 
 #### Sitecore Package Deployer ####
-The next step is to install the Sitecore Package Deployer into your Sitecore environments. This is done by configuring it as a module in the **azuredeploy.aparameters.json** file:
+The next step is to install the Sitecore Package Deployer into your Sitecore environments. This is done by configuring it as a module in the **azuredeploy.parameters.json** file:
 
     "modules": {
       "value": {
@@ -110,12 +110,12 @@ You will need to configure the urls in the above module snippet to point at the 
 You can obtain an example script for the above install from the file **SC82U3_XP/azuredeploy.parameters.json.example** in [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates).
 
 ### Running the install script
-An install script called **Install.ps1** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates). This will need to be modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and blob storage repos described above.
+An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and blob storage repos described above.
 
-Once the fole has been modified, run it from PowerShell and it will prompt you for credentials and create your environment.
+Once the file has been modified, run it from PowerShell and it will prompt you for credentials and create your environment.
 
 ### Adding LaunchSitecore to the default install
-The last step is to setup the scripts so that the compiled LaunchSitecore site is provisined into the new XP environment. To make this easy, we decided to use the MSDeploy package created during the build. This package contains all the compiled code for the site. The compiled code for the CM and CD should be exactly the same.
+The last step is to setup the scripts so that the compiled LaunchSitecore site is provisioned into the new XP environment. To make this easy, we decided to use the MSDeploy package created during the build. This package contains all the compiled code for the site. The compiled code for the CM and CD should be exactly the same.
  
 Setting up the install script to push an MSDeploy package generated by a build server is relatively simple.
 
@@ -176,16 +176,19 @@ The powershell script to install the deployment slot is very similar to the scri
 ## Swapping live for Staging
 Once the staging instance has been deployed and tested, the instance can be pushed live by simply selecting the cd server in the dashboard and clicking on the Swap button:
 
-![Swap Instance](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/SwapInstance.png?raw=true)
+![Swap Instance](./Images/SwapInstance.png?raw=true)
 
 # Going Further
-This example uses the Sitecore Package Deployer to install Sitecore items. This allows new versions of the Sitecore items to be deployed very easily. Unfortunately, once those items are deployed into production, they can have adverse effects on the website that is running an older version of the code.
+This example uses the Sitecore Package Deployer to install Sitecore items. This allows new versions of the Sitecore items to be deployed very easily. Unfortunately, once those items are deployed into your instance of Sitecore, they could have adverse effects on the website that is running an older version of the code.
 
-There are a number of possible solutions to this issue. The Azure environment can be easily controlled with Powershell, so many possible scenarios can be implemented to reduce or eliminate downtime.
+There are a number of possible solutions to this issue. The Azure environment can be easily controlled with Powershell, so many possible scenarios can be implemented to reduce or eliminate downtime depending on your needs.
 
-A simple solution to reduce downtime in a complete blue/green deployment scenario is to backup the current web database and re-point the live environment to the backup. This will freeze the website and allow it to function while deploying and testing the new version. After deploying and testing the new version with new items, the staging slot can be swapped with the live slot. The old version of the website can be preserved for a few days incase there are issues.
+A simple solution to reduce downtime in a complete blue/green deployment scenario is to backup the current web database and re-point the live environment to the backup. This will freeze the website and allow it to function while deploying and testing the new version. After deploying and testing the new version with new items, the staging slot can be swapped with the live slot. The old version of the website can be preserved for a few days incase there are issues, and deleted when no longer needed.
 
-Backup & rollback scenarios are not covered by these scripts either. This can be easilly accomplised by backing up the master & core databases along with the CM instance using PowerShell scripts. This isn't a perfect rollback scenario, but it will allow the instance to be restored to its pre-deployment state
+Backup & rollback scenarios are not covered by these scripts either. This can be easily accomplised by backing up the master & core databases along with the CM instance using PowerShell scripts. This isn't a perfect rollback scenario, but it will allow the instance to be restored to its pre-deployment state
+
+# Conclusion
+The Sitecore latest version of the Sitecore Azure environment is a very powerful tool for deploying and manging Sitecore environments. Because of the tremendous flexibility and scriptability of Azure, many Sitecore hosting scenarios can be created and easily managed.
 
 
 
