@@ -7,6 +7,6 @@ Import-Module c:\temp\SitecoreAzure\Tools\Sitecore.Cloud.Cmdlets.psm1
 #Add the azure account
 Add-AzureRmAccount
 
-$Name="sc82u3-launch1"
+$Name="[deployment name]"
 
 Start-SitecoreAzureDeployment -Location "East US" -Name $Name -ArmTemplateUrl "https://????.blob.core.windows.net/sitecore/xp/azuredeploy.json" -ArmParametersPath ".\azuredeploy.parameters.json" -LicenseXmlPath "????\license.xml" -Verbose
