@@ -31,11 +31,11 @@ The LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core pr
 ### Creating the build
 The VS build was easy to setup with minimal customizations. The first step was to choose an Azure Web App build:
 
-![Create build template](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/CreateVsBuildTemplate.png?raw=true)
+![Create build template](./blob/master/Images/CreateVsBuildTemplate.png?raw=true)
 
 Next, the build was customized by disabling the azure deploy and test tasks:
 
-![Build settings](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/VsBuildSettings.png?raw=true)
+![Build settings](./blob/master/Images/VsBuildSettings.png?raw=true)
 
 The Azure Deploy task was disabled since we don't want to deploy directly to Azure and the Test task was disabled because we don't have any tests at this time.
 
@@ -46,13 +46,13 @@ Since the build is creating Sitecore Update Packages, these packages need to be 
 The last step is to run the build. The build artifacts will be used later.
 
 ## Deploying the Sitecore environment
-There are a large number of steps to installing the Sitecore azure environment. I chose to use the XP environment with the lowest settings. This was done purely for research purposes, other environment configurations should work correctly.
+Installing Sitecore in an Azure environment can be complex due to the large number of options availble to the user. I chose to use the XP environment (the most complex) with the lowest settings. This was done purely for research purposes, other environment configurations should well with minor modifications to the scripts included here.
 
 ### Azure deployment package storage
-When installing the Sitecore Azure packages, the packages and the Sitecore templates need to be stored in an online blob container so the build can access them. I will describe how these were setup. In some cases, the relative paths to the files are important.
+The Sitecore Azure packages and Azure templates need to be stored in an online blob container so the deployment scripts can access them. The arrangement of the azure templates is dependent on relative paths, so it is important to follow the exact procedures in this document.
 
 #### Sitecore Components ####
-The first set of files to upload to blob storage is the Sitecore deployment files. These should go in a folder together. I called my storage container **sitecore82u3**:
+The first set of files to upload to blob storage are the Sitecore deployment files. These should be located in a single folder. I called my storage container **sitecore82u3**:
 
 ![Sitecore assets](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/SitecoreAssets.png?raw=true)
 
