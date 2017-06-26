@@ -31,11 +31,11 @@ The LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core pr
 ### Creating the build
 The VS build was easy to setup with minimal customizations. The first step was to choose an Azure Web App build:
 
-![Create build template](./blob/master/Images/CreateVsBuildTemplate.png?raw=true)
+![Create build template](./Images/CreateVsBuildTemplate.png?raw=true)
 
 Next, the build was customized by disabling the azure deploy and test tasks:
 
-![Build settings](./blob/master/Images/VsBuildSettings.png?raw=true)
+![Build settings](./Images/VsBuildSettings.png?raw=true)
 
 The Azure Deploy task was disabled since we don't want to deploy directly to Azure and the Test task was disabled because we don't have any tests at this time.
 
