@@ -31,17 +31,17 @@ The LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core pr
 ### Creating the build
 The VS build was easy to setup with minimal customizations. The first step was to choose an Azure Web App build:
 
-![Create build template](../../images/CreateVsBuildtemplate.png)
+![Create build template](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/CreateVsBuildTemplate.png?raw=true)
 
 Next, the build was customized by disabling the azure deploy and test tasks:
 
-![Build settings](/images/VsBuildSettings.png)
+![Build settings](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/VsBuildSettings.png?raw=true)
 
 The Azure Deploy task was disabled since we don't want to deploy directly to Azure and the Test task was disabled because we don't have any tests at this time.
 
 Since the build is creating Sitecore Update Packages, these packages need to be added to the build artifacts. This is done with the "Copy Packages to Artifacts" copy task. The configuration for this is:
 
-![Copy Package Settings](./images/VsBuildCopyPackages.png)
+![Copy Package Settings](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/VsBuildCopyPackages.png?raw=true)
 
 The last step is to run the build. The build artifacts will be used later.
 
@@ -54,7 +54,7 @@ When installing the Sitecore Azure packages, the packages and the Sitecore templ
 #### Sitecore Components ####
 The first set of files to upload to blob storage is the Sitecore deployment files. These should go in a folder together. I called my storage container **sitecore82u3**:
 
-![Sitecore assets](./images/SitecoreAssets.png)
+![Sitecore assets](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/SitecoreAssets.png?raw=true)
 
 These files can be downloaded from http://dev.sitecore.net. The **Sitecore.Cloud.Integration.Bootload.wdp.zip** file was obtained from the Sitecore GitHub mentioned in this article: [Configure the Bootloader module for a Sitecore deployment ](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/configuring/configure_the_bootloader_module_for_a_sitecore_deployment).
 
@@ -71,13 +71,13 @@ We have provided some custom scripts that need to be pushed into the **sitecore*
 
 The first step is to create the sitecore folder in blob storage and upload the blob scripts from our Git repository:
 
-![Upload Scripts](.\images\CreateSitecoreFolderInBlobStorage.png)
+![Upload Scripts](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
 
 This will upload our scripts into blob storage.
 
 Next, The Sitecore Azure toolkit needs to be uploaded into the same storage area. You can obtain the Sitecore toolkit deployment scripts from Sitecore's Git Repository at: [Sitecore-Azure-Quickstart-Templates](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates). These scripts are uploaded into the **sitecore** Blob Container into a folder called **xp**. Everything in the /Sitecore 8.2.3/xp folder should be uploaded to the **xp** folder.
 
-![Upload Azure Templates](.\images\UploadAzureTemplatestoBlobStorage.png)
+![Upload Azure Templates](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/UploadAzureTemplatestoBlobStorage.png?raw=true)
 
 This should be everything you need to install the default XP instance in Sitecore Azure.
 
@@ -176,7 +176,7 @@ The powershell script to install the deployment slot is very similar to the scri
 ## Swapping live for Staging
 Once the staging instance has been deployed and tested, the instance can be pushed live by simply selecting the cd server in the dashboard and clicking on the Swap button:
 
-![Swap Instance](./Images/SwapInstance.png)
+![Swap Instance](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/Images/SwapInstance.png?raw=true)
 
 # Going Further
 This example uses the Sitecore Package Deployer to install Sitecore items. This allows new versions of the Sitecore items to be deployed very easily. Unfortunately, once those items are deployed into production, they can have adverse effects on the website that is running an older version of the code.
