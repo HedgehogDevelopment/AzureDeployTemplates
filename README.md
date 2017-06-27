@@ -22,7 +22,7 @@ The list of tools was chosen to keep the environment as simple as possible. Thes
 The first step is to actually build Launch Sitecore on a build server. We want to build an MSDeploy package for code and a Sitecore Update Package for the Launch Sitecore items.
 
 ### Creating the projects
-A local development environment for Launch Sitecore needs t obe built. The files in the the VS solution were added to a VSO project and two TDS Classic projects were added to the soltuion. One for the Core database and one for Master.
+A local development environment for Launch Sitecore needs to be built. The files in the the VS solution were added to a VSO project and two TDS Classic projects were added to the soltuion. One for the Core database and one for Master.
 
 The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository.
 
@@ -46,7 +46,7 @@ Since the build is creating Sitecore Update Packages, these packages need to be 
 The last step is to run the build. The build artifacts will be used later.
 
 ## Deploying the Sitecore environment
-Installing Sitecore in an Azure environment can be complex due to the large number of options availble to the user. I chose to use the XP environment (the most complex) with the lowest settings. This was done purely for research purposes, other environment configurations should well with minor modifications to the scripts included here.
+Installing Sitecore in an Azure environment can be complex due to the large number of options availble to the user. I chose to use the XP environment (the most complex) with the lowest settings. This was done purely for research purposes, other environment configurations should work well with minor modifications to the scripts included here.
 
 ### Azure deployment package storage
 The Sitecore Azure packages and Azure templates need to be stored in an online blob container so the deployment scripts can access them. The arrangement of the azure templates is dependent on relative paths, so it is important to follow the exact procedures in this document.
@@ -188,7 +188,7 @@ A simple solution to reduce downtime in a complete blue/green deployment scenari
 Backup & rollback scenarios are not covered by these scripts either. This can be easily accomplised by backing up the master & core databases along with the CM instance using PowerShell scripts. This isn't a perfect rollback scenario, but it will allow the instance to be restored to its pre-deployment state
 
 # Conclusion
-The Sitecore latest version of the Sitecore Azure environment is a very powerful tool for deploying and manging Sitecore environments. Because of the tremendous flexibility and scriptability of Azure, many Sitecore hosting scenarios can be created and easily managed.
+The latest version of Sitecore Azure is a very powerful tool for deploying and manging Sitecore environments. Because of the tremendous flexibility and scriptability of Azure, many Sitecore hosting scenarios can be created and easily managed.
 
 
 
