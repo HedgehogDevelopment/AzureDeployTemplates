@@ -2,10 +2,10 @@ Blog Post
 
 1. Intro, Setting up the Solution and VSO Build
 
-In this blog post series we are going to setup a Sitecore instance on Azure, with our initial deployment including some custom built modules as add-ons to that setup.
-Then we're going to enable blue/green deployments on our CD instance, allowing us utilize an Azure staging slot to preview our new release before it goes live, and then swap that slot out with the current live website. This will give us zero downtime deployments, so the front end users of our site will not be affected.
+In this blog post series I am going to setup a Sitecore instance on Azure, with the initial deployment including some custom built modules as add-ons to the setup.
+Then I'll go through enabling blue/green deployments on the CD instance, allowing us to utilize an Azure staging slot in order to preview our new release before it goes live, and then swap that slot out with the current live website. This will give us zero downtime deployments, so the front end users of the site will not be affected.
 
-Blue/Green Deployments have been mentioned in the past by various Sitecore MVPs, like [Link]Rob Habraken and [Link]Bas Lijten. In this series of posts, we will dive deeper into the setup for custom modules with the new Sitecore Azure Toolkit (v1.1), new Sitecore ARM templates (for Sitecore 8.2 Update3+) and some PowerShell scripts that we've created to make this a devops engineer's dream!
+Blue/Green Deployments have been mentioned in the past by various Sitecore MVPs, like [Rob Habraken](https://www.robhabraken.nl/index.php/2740/blue-green-sitecore-deployments-on-azure/) and [Bas Lijten](http://blog.baslijten.com/sitecore-on-azure-create-custom-web-deploy-packages-using-the-sitecore-azure-toolkit/). In this series of posts, we will dive deeper into the setup for custom modules with the new Sitecore Azure Toolkit (v1.1), new Sitecore ARM templates (for Sitecore 8.2 Update3+) and some PowerShell scripts that we've created to make this a devops engineer's dream!
 
 1. Intro, Setting up the solution and VSO build [this]
 2. Preparing the default scripts and packages for Azure Deployment [Link]
@@ -21,7 +21,7 @@ The list of tools was chosen to keep the environment as simple as possible. Thes
 2. The Azure hosting environment
 3. Team Development for Sitecore Classic
 4. Visual Studio Online with a build server 
-5. Launch Sitecore
+5. Launch Sitecore project codebase
 6. VS Code
 7. Microsoft Azure Storage explorer
 
@@ -31,7 +31,7 @@ The first step is to actually build Launch Sitecore on a build server. We want t
 ### Creating the projects
 A local development environment for Launch Sitecore needs to be built. The files in the the VS solution were added to a VSO project and two TDS Classic projects were added to the soltuion. One for the Core database and one for Master.
 
-The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository. A very similar solution structure for this can be found on Sean Holmesby's LaunchSitecoreTDS repository (https://github.com/SaintSkeeta/LaunchSitecoreTDS). (Note that Sean's repository actually has 4 TDS projects, where the Base templates and Media items are separated into their own TDS Classic projects in order to demonstrate other TDS Classic features).
+The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository. A very similar solution structure for this can be found on [Sean Holmesby's LaunchSitecoreTDS repository](https://github.com/SaintSkeeta/LaunchSitecoreTDS). (Note that Sean's repository actually has 4 TDS projects, where the Base templates and Media items are separated into their own TDS Classic projects in order to demonstrate other TDS Classic features).
 
 For our demo, the LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core project into a single update package. The Release configuration was setup to generate only an item package at build time.
 
