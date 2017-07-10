@@ -99,7 +99,7 @@ This initially caused us problems because certain scripts needed to be stored in
 #### Deployment Scripts: Option 1 - Give public access  ####
 Our solution to this was to create a public blob storage container called **sitecore** and store all of the scripts in there. Since it was public, no shared access token was needed and everything worked correctly.
 
-This was the option we went with....being the easiest to setup. You can see some other alternatives further down the page.
+This was the option we went with....being the easiest to setup. You can see an alternative to this method further down the page.
 
 The default ARM templates need to be uploaded into a storage container. Download the default ARM template scripts from the [Sitecore GitHub repository](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates/tree/master/Sitecore%208.2.3/xp) repository. These scripts need to be uploaded into the **sitecore** Blob Container into a folder called **xp**. Everything in the /Sitecore 8.2.3/xp folder from Sitecore's default repository should be uploaded to the **xp** folder in the storage container.
 
@@ -113,13 +113,10 @@ Now you can navigate to the azuredeploy.json file in the Azure Storage Explorer,
 #### Deployment Scripts: Option 2 - Give a single SAS to the entire templates container  ####
 An alternative way of granting access to the ARM templates is to grant a Shared Access Signature on the container (instead of giving it public access), and then set the `$templatelinkAccessToken` parameter. You can do this by passing in the $templatelinkAccessToken value though the -SetKeyValue argument in your deployment. A full explanation can be found [here](http://lets-share.senktas.net/2017/07/sitecore-on-azure-sas-token.html).
 
-#### Deployment Scripts: Option 3 - Use Sitecore's Cmdlets  ####
-sholmesby: TODO: Sus this one out to see how it can be done.
-
 Now you have the ARM templates in a storage container, and the packages also in a container, this should be everything you need to install the default XP instance in Sitecore Azure.
 
 ### Running the install script
-An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 or 3 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
+An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
 
 Once the file has been modified, update your local azure.deploy.parameters.json file with your blob storage URLs (to the CM, CD, PRC and REP packages), and Mongo connection strings (you can setup some free ones using [MLab](http://www.mlab.com/). You also need to update the other parameters with usernames/passwords as you wish.
 
