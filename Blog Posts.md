@@ -77,29 +77,31 @@ Installing Sitecore in an Azure environment can be complex due to the large numb
 This post goes over preparing the default packages for a Sitecore Azure deployment. Later (in the next post) we will be extending this to add a custom module to the install.
 
 ### Azure deployment package storage
-The Sitecore Azure packages and Azure templates need to be stored in an online blob container so the deployment scripts can access them. The arrangement of the azure templates is dependent on relative paths, so it is important to follow the exact procedures in this post.
+The Sitecore Azure packages and Azure templates need to be stored in [an online blob container](https://docs.microsoft.com/en-us/azure/storage/storage-create-storage-account) so the deployment scripts can access them. The arrangement of the azure templates is dependent on relative paths, so it is important to follow the exact procedures in this post.
 
 #### Sitecore Components ####
 The first set of files to upload to blob storage are the Sitecore deployment files. These should be located in a single folder. I called my storage container **sitecore82u3**:
 
 ![Sitecore assets](./Images/SitecoreAssets.png?raw=true)
 
-The **Sitecore 8.2 rev. 170407_cd.scwdp.zip**, **Sitecore 8.2 rev. 170407_cm.scwdp.zip**, **Sitecore 8.2 rev. 170407_prc.scwdp.zip** and **Sitecore 8.2 rev. 170407_rep.scwdp.zip** packages are the default packages from Sitecore. They can be downloaded for any particular Sitecore instance from that version's download page. i.e You can find the packages for Sitecore 8.2 Update 4 under the 'Download options for Azure AppService' section here (https://dev.sitecore.net/Downloads/Sitecore_Experience_Platform/82/Sitecore_Experience_Platform_82_Update4.aspx) 
+The **Sitecore 8.2 rev. 170407_cd.scwdp.zip**, **Sitecore 8.2 rev. 170407_cm.scwdp.zip**, **Sitecore 8.2 rev. 170407_prc.scwdp.zip** and **Sitecore 8.2 rev. 170407_rep.scwdp.zip** packages are the default packages from Sitecore. They can be downloaded for any particular Sitecore instance from that version's download page. i.e You can find the packages for Sitecore 8.2 Update 4 under the 'Download options for Azure AppService' section [here](https://dev.sitecore.net/Downloads/Sitecore_Experience_Platform/82/Sitecore_Experience_Platform_82_Update4.aspx). 
 
-These files contain the full Sitecore installations, and should be stored in a non-public blob. This means you will have to use the Azure Storage Explorer to create a shared access signature for each file. The full URL's for each file with the shared access signature should be added to the appropriate location in your **azuredeploy.parameters.json** file. An example file is included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/azuredeploy.parameters.json.example).
+
+These files contain the full Sitecore installations, and should be stored in a non-public blob. This means you will have to use the Azure Storage Explorer to create [a shared access signature](https://docs.microsoft.com/en-us/azure/storage/storage-dotnet-shared-access-signature-part-1) for each file. The full URL's for each file with the shared access signature should be added to the appropriate location in your **azuredeploy.parameters.json** file. An example file is included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/azuredeploy.parameters.json.example).
+
+Note: The **_nodb** and **_Bootload** packages seen in the image will be discussed later in this blog post series. They will not yet be needed for the default setup described in this post.
 
 #### Deployment Scripts ####
-One of the problems we ran into building our deployments for Sitecore 8.2 update 3 was that the scripts and templates needed to be referenced via a URL instead of the local file system. The 8.2 update 1 scripts worked fine if they were on the local file system, but the update 3 scripts did not.
+One of the problems we ran into building our deployments for Sitecore 8.2 update 3 (using v1.1 of the Sitecore Azure Toolkit) was that the scripts and templates needed to be referenced via a URL instead of the local file system. The 8.2 update 1 scripts (with v1.0 of the Sitecore Azure Toolkit) worked fine if they were on the local file system, but the newer method did not.
 
-This initially caused us problems because certain scripts needed to be stored in specific folders relative to other scripts and the shared access token got in the way of constructing the urls. Our solution to this was to create a public blob storage container called **sitecore** and store all of our scripts in there. Since it was public, no shared access token was needed and everything worked correctly.
+This initially caused us problems because certain scripts needed to be stored in specific folders relative to other scripts and the shared access token got in the way of constructing the urls.
 
-An alternative way of doing this with a Shared Access Signature on the container (instead of giving it public access) can be found here. [http://lets-share.senktas.net/2017/07/sitecore-on-azure-sas-token.html]
+#### Deployment Scripts: Option 1 - Give public access  ####
+Our solution to this was to create a public blob storage container called **sitecore** and store all of the scripts in there. Since it was public, no shared access token was needed and everything worked correctly.
 
-The first step is to create the **sitecore** container in blob storage and upload the blob scripts from our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates) repository:
+This was the option we went with....being the easiest to setup. You can see some other alternatives further down the page.
 
-![Upload Scripts](./Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
-
-Next, The ARM templates needs to be uploaded into the same storage area. You can obtain the ARM templates from Sitecore's Git Repository at: [Sitecore-Azure-Quickstart-Templates](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates). These scripts are uploaded into the **Sitecore 8.2.3** Blob Container into a folder called **xp**. Everything in the /Sitecore 8.2.3/xp folder should be uploaded to the **xp** folder.
+The default ARM templates need to be uploaded into a storage container. Download the default ARM template scripts from the [Sitecore GitHub repository](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates/tree/master/Sitecore%208.2.3/xp) repository. These scripts need to be uploaded into the **sitecore** Blob Container into a folder called **xp**. Everything in the /Sitecore 8.2.3/xp folder from Sitecore's default repository should be uploaded to the **xp** folder in the storage container.
 
 ![Upload Azure Templates](./Images/UploadAzureTemplatestoBlobStorage.png?raw=true)
 
@@ -108,12 +110,19 @@ Finally, grant public access to the container by right clicking it, and selectin
 
 Now you can navigate to the azuredeploy.json file in the Azure Storage Explorer, right click it, select Properties and retrieve the Uri property. This will be the URL you set in the PowerShell script later as the -ArmTemplateUrl value.
 
-This should be everything you need to install the default XP instance in Sitecore Azure.
+#### Deployment Scripts: Option 2 - Give a single SAS to the entire templates container  ####
+An alternative way of granting access to the ARM templates is to grant a Shared Access Signature on the container (instead of giving it public access), and then set the `$templatelinkAccessToken` parameter. You can do this by passing in the $templatelinkAccessToken value though the -SetKeyValue argument in your deployment. A full explanation can be found [here](http://lets-share.senktas.net/2017/07/sitecore-on-azure-sas-token.html).
+
+#### Deployment Scripts: Option 3 - Use Sitecore's Cmdlets  ####
+sholmesby: TODO: Sus this one out to see how it can be done.
+
+Now you have the ARM templates in a storage container, and the packages also in a container, this should be everything you need to install the default XP instance in Sitecore Azure.
 
 ### Running the install script
-An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above.
+An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 or 3 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
 
-Once the file has been modified, update your local azure.deploy.parameters.json file with your blob storage URLs (to the CM, CD, PRC and REP packages), and Mongo connection strings (you can setup some free ones using MLab [Link]. You also need to update the other parameters with usernames/passwords as you wish.
+Once the file has been modified, update your local azure.deploy.parameters.json file with your blob storage URLs (to the CM, CD, PRC and REP packages), and Mongo connection strings (you can setup some free ones using [MLab](http://www.mlab.com/). You also need to update the other parameters with usernames/passwords as you wish.
+
 Save the file, and run the Install.ps1 script from PowerShell. It will prompt you for credentials and create your default environment. After about 20-30 minutes, you will have a working, default Sitecore instance.
 
 Next we will look into adding custom modules to our install process.
@@ -140,7 +149,7 @@ In the previous post, we setup a default Sitecore install, using the basic packa
 #### Bootstrap Module ####
 The **Sitecore.Cloud.Integration.Bootload.wdp.zip** file was obtained from the Sitecore GitHub mentioned in this article: [Configure the Bootloader module for a Sitecore deployment ](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/configure_the_bootloader_module_for_a_sitecore_deployment).
 
-Upload it to your online blob storage container, the same way we uploaded the CM, CD, PRC and REP packages earlier.
+Upload it to your online blob storage container, the same way we uploaded the CM, CD, PRC and REP packages earlier (into the sitecore82u3 container).
 
 #### Create the Sitecore Package Deployer Package ####
 The Sitecore Azure Toolkit has some additional Cmdlets that allow you to create scwdp packages from modules. Typically these come in the form of Zip packages, that we find from the Sitecore Marketplace.
@@ -188,7 +197,7 @@ To install the Sitecore Package Deployer into your Sitecore environments we just
 
 You will need to configure the urls in the above module snippet to point at the correct locations in your blob storage.
 
-You can obtain an example script for the above install from the file **SC82U3_XP/azuredeploy.parameters.json.example** in [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates).
+You can obtain an example script for the above install from the file **SC82U3_XP/azuredeploy.parameters.json.example** from [here](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/azuredeploy.parameters.json.example).
 
 Notice that the Bootloader module is defined first in the items array. This is that bootloader that we pulled down from Sitecore earlier. It is a tiny module that facilitates the installation of custom modules...which, in this case, is our Sitecore Package Deployer.
 
@@ -220,6 +229,12 @@ Now we want to modify the scripts so that the compiled LaunchSitecore site is pr
  
 Setting up the install script to push an MSDeploy package generated by a build server is relatively simple.
 
+#### Upload the custom scripts to allow for MSDeploy packages to be installed. ####
+The first step is to upload our custom scripts to the **sitecore** container in blob storage that was created earlier (with the default scripts). Upload our [custom scripts for MSDeploy](https://github.com/HedgehogDevelopment/AzureDeployTemplates/tree/master/sitecore/xp/custom).
+Place these in the same relative folder path (/xp/custom) so that the relative paths continue to match up.
+
+![Upload Scripts](./Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
+
 #### Updating the deploy parameters
 The deploy script needs to be configured to deploy the MSDeploy package into the new instance using the "modules" confiuguration section of the **azuredeploy.aparameters.json** file. This is the same location that we adding the custom module, the Sitecore Package Deployer, in the previous post.
 
@@ -242,7 +257,7 @@ The deploy script needs to be configured to deploy the MSDeploy package into the
           },
           {
             "name": "launch-sitecore",
-            "templateLink": "https://????.blob.core.windows.net/sitecore/MSDeploy/InstallMSDeployPackage.azuredeploy.json",
+            "templateLink": "https://????.blob.core.windows.net/sitecore/custom/InstallMSDeployPackage.azuredeploy.json",
             "parameters": {
               "msDeployPackageUrl": "https://????.blob.core.windows.net/LaunchSitecore/Release1.2.zip?[shared access signature]"
             }
