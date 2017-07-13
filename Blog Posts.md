@@ -31,7 +31,7 @@ The first step is to actually build Launch Sitecore on a build server. We want t
 ### Creating the projects
 A local development environment for Launch Sitecore needs to be built. The files in the the VS solution were added to a VSO project and two TDS Classic projects were added to the soltuion. One for the Core database and one for Master.
 
-The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository. A very similar solution structure for this can be found on [Sean Holmesby's LaunchSitecoreTDS repository](https://github.com/SaintSkeeta/LaunchSitecoreTDS). (Note that Sean's repository actually has 4 TDS projects, where the Base templates and Media items are separated into their own TDS Classic projects in order to demonstrate other TDS Classic features).
+The items in the Launch Sitecore package were added to the TDS projects and everything was commited to the VSO source code repository. A very similar solution structure for this can be found on [Sean Holmesby's LaunchSitecoreTDS repository](https://github.com/SaintSkeeta/LaunchSitecoreTDS). (Note that Sean's repository actually has 4 TDS projects, where the Base templates and Media items are separated into their own TDS Classic projects in order to demonstrate other TDS Classic features. This also means the assets/img folder is not part of the web project, so ensure you add that if you're using this example solution to test this out).
 
 For our demo, the LaunchSitecore.Master project was setup to bundle the LaunchSitecore.Core project into a single update package. The Release configuration was setup to generate only an item package at build time.
 
