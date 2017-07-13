@@ -164,16 +164,32 @@ The **Sitecore.Cloud.Integration.Bootload.wdp.zip** file was obtained from the S
 
 Upload it to your online blob storage container, the same way we uploaded the CM, CD, PRC and REP packages earlier (into the sitecore82u3 container).
 
-#### Create the Sitecore Package Deployer Package ####
-The Sitecore Azure Toolkit has some additional Cmdlets that allow you to create scwdp packages from modules. Typically these come in the form of Zip packages, that we find from the Sitecore Marketplace.
+#### Import Cmdlets for Module Package Creation ####
+The Sitecore Azure Toolkit has some additional Cmdlets that allow you to create scwdp packages from modules. Typically these modules come in the form of Zip packages, that we find from the Sitecore Marketplace, or as .update packages, like those that can be created through TDS Classic.
 
-When attempting to take the Sitecore Package Deployer module's zip, and using these commands on it, I found that the toolkit didn't correct package up the module. It seems as those these commands work find on the basic Sitecore modules (WFFM, EXM, SXA etc.) but not for any other modules.
+The [Sitecore documentation](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/packaging/the_web_deploy_packages_for_a_module) for creating these packages mentions the use of the `ConvertTo-SCModuleWebDeployPackage` Cmdlet. To use this Cmdlet run the following in a PowerShell window.
+`Import-Module .\Tools\Sitecore.Cloud.Cmdlets.dll -Verbose`
+Notice that this pulls in the Cmdlets from the DLL, not the psm1 script that was used earlier.
+This will bring in a bunch of Cmdlets that help us create packages for Sitecore deployments, including the one mentioned above. (Note: Beware that a similarly named Cmdlet, ConvertTo-SitecoreWebDeployPackage, was already brought in by the psm1 import. This Cmdlet produced incorrect packages for me, so I would advise against using it for now).
+
+#### Create the Sitecore Package Deployer Package ####
+
+##### Option 1: Use the above Cmdlet to create the package #####
+Using the above Cmdlet, create the scwdp.zip package from your update or zip package.
+
+`ConvertTo-SCWebDeployPackage -Path [PathToUpdatePackage] -Destination [FolderToSaveSCWDPPackage]`
+
+Note: For more advanced scenarios, you can modify the output module package as described by the [Sitecore documentation](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/packaging/the_web_deploy_packages_for_a_module). This can allow you to apply transformations, embed files, adjust parameters etc. as needed for a more complex package and deployment.
+
+##### Option 2: Manually Create the Package #####
+Initially, when attempting to take the Sitecore Package Deployer module's update file, and using these commands on it, I found that the toolkit didn't correct package up the module. It seems as those these commands work find on the basic Sitecore modules (WFFM, EXM, SXA etc.) but not for any other modules.
 
 To get around this, I copied the package for the bootloader, unzipped it...and kept the same structure inside. I then copied over the Sitecore Package Deployer files into that directory.
 Then I zipped it up, and renamed it to .scwdp.zip. Simple!
 We've uploaded the resulting scwdp.zip file to our Github repo, here. [https://github.com/HedgehogDevelopment/AzureDeployTemplates/tree/master/sitecore/SitecorePackageDeployer/SitecorePackageDeployer-1.8.scwdp.zip]
 
-Now upload it to your online blob storage container as well.
+
+Once you have a properly build scwdp.zip package, upload it to your online blob storage container like the other packages.
 
 #### Sitecore Package Deployer Configuration ####
 The module requires some configuration for itself. As we can see, the bootloader also comes with a .json file (addons/bootloader.json).
