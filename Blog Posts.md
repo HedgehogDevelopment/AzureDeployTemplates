@@ -1,6 +1,6 @@
 Blog Post
 
-1. Intro, Setting up the Solution and VSO Build
+## 1. Intro, Setting up the Solution and VSO Build ##
 
 In this blog post series I am going to setup a Sitecore instance on Azure, with the initial deployment including some custom built modules as add-ons to the setup.
 Then I'll go through enabling blue/green deployments on the CD instance, allowing us to utilize an Azure staging slot in order to preview our new release before it goes live, and then swap that slot out with the current live website. This will give us zero downtime deployments, so the front end users of the site will not be affected.
@@ -62,7 +62,7 @@ Now we have a working solution, with code and items being output as the build ar
 
 
 
-2. ## Preparing the default scripts and packages for Azure Deployment
+## 2. Preparing the default scripts and packages for Azure Deployment ##
 
 This is part 2 in my series of blog posts on Sitecore deployments on Azure. The other posts in this series can be found here:-
 
@@ -92,6 +92,19 @@ These files contain the full Sitecore installations, and should be stored in a n
 Note: The **_nodb** and **_Bootload** packages seen in the image will be discussed later in this blog post series. They will not yet be needed for the default setup described in this post.
 
 #### Deployment Scripts ####
+
+##### Additional Change Required for Sitecore 8.2 Update 4 (rev. 170614) #####
+When testing with Sitecore 8.2 Update 4, we found that the deployment failed with the error.
+`"message": "Package deployment failed\r\nAppGallery Deploy Failed:
+'Microsoft.Web.Deployment.DeploymentClientServerException: Missing source parameter 'Social Link Domain' (Social Link
+Domain). This must be set for successful synchronization.`
+
+As it turns out, there is an additional parameter in the deployment package, which is not references in the parameters. [Bas Lijten](http://blog.baslijten.com/) pointed out to me that to fix this, you can either manually add that parameter to the ARM template, or rebuild the Web Deploy Package, removing the parameter.
+We opted to add it to the ARM template, passing a blank value. the following was added to the nested/application.json template file, for the CM deployment (the parameter is only required on CM for the xp setup)
+`"Social Link Domain": ""`
+The updated version of this file can be found on our [Github repo](https://github.com/HedgehogDevelopment/AzureDeployTemplates/tree/master/sitecore/xp/nested/application.json.8.2.4.fix).  Within there we currently hard code the domain used by the Social Connect module....but you can modify it to read from parameters if you like, passing in a correct value. For now, the hard coded value gets us past the deployment issue, so grab the file and rename it to application.json, overwriting the default one that comes from Sitecore's repo. (it's a  copy of the files from [Sitecore's repo](https://github.com/Sitecore/Sitecore-Azure-Quickstart-Templates/blob/master/Sitecore%208.2.3/xp/nested/application.json) with the change above added, is up to date as of the 13th of July, 2017).
+
+##### Uploading the Default Scripts #####
 One of the problems we ran into building our deployments for Sitecore 8.2 update 3 (using v1.1 of the Sitecore Azure Toolkit) was that the scripts and templates needed to be referenced via a URL instead of the local file system. The 8.2 update 1 scripts (with v1.0 of the Sitecore Azure Toolkit) worked fine if they were on the local file system, but the newer method did not.
 
 This initially caused us problems because certain scripts needed to be stored in specific folders relative to other scripts and the shared access token got in the way of constructing the urls.
@@ -116,9 +129,9 @@ An alternative way of granting access to the ARM templates is to grant a Shared 
 Now you have the ARM templates in a storage container, and the packages also in a container, this should be everything you need to install the default XP instance in Sitecore Azure.
 
 ### Running the install script
-An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/82/working_with_sitecore_azure/configuring_sitecore_azure/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
+An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
 
-Once the file has been modified, update your local azure.deploy.parameters.json file with your blob storage URLs (to the CM, CD, PRC and REP packages), and Mongo connection strings (you can setup some free ones using [MLab](http://www.mlab.com/). You also need to update the other parameters with usernames/passwords as you wish.
+Once the file has been modified, update your local azure.deploy.parameters.json file with your blob storage URLs (to the CM, CD, PRC and REP packages), and Mongo connection strings (you can setup some free ones using [MLab](http://www.mlab.com/). You also need to update the other parameters with usernames/passwords as you wish, as described [here](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/getting_started_with_sitecore_azure_toolkit).
 
 Save the file, and run the Install.ps1 script from PowerShell. It will prompt you for credentials and create your default environment. After about 20-30 minutes, you will have a working, default Sitecore instance.
 
@@ -130,7 +143,7 @@ Next we will look into adding custom modules to our install process.
 
 
 
-3. ## Adding custom modules to an Azure Deployment
+## 3.  Adding custom modules to an Azure Deployment ##
 
 This is part 3 in my series of blog posts on Sitecore deployments on Azure. The other posts in this series can be found here:-
 
@@ -141,7 +154,10 @@ This is part 3 in my series of blog posts on Sitecore deployments on Azure. The 
 5. Deploying to a Slot [Link]
 6. True Blue Green Deployments for Sitecore on Azure [Link]
 
-In the previous post, we setup a default Sitecore install, using the basic packages from Sitecore. Now we want modify so that our initial install contains the [Sitecore Package Deployer](https://github.com/HedgehogDevelopment/SitecorePackageDeployer/) module. This module allows us to drop in Sitecore Update Packages on the file system, which will automatically be installed into the website. This is an excellent way for us to enable continuous integration to the website, being able to install our item updates to the website along with our code.
+In the previous post, we setup a default Sitecore install, using the basic packages from Sitecore. Now we want to modify that install so that our initial install contains the [Sitecore Package Deployer](https://github.com/HedgehogDevelopment/SitecorePackageDeployer/) module. This module allows us to drop in Sitecore Update Packages on the file system, which will automatically be installed into the website. This is an excellent way for us to enable continuous integration to the website, being able to install our item updates to the website along with our code.
+
+#### Cleanup Prior Post's Resource Group #### 
+First, make sure you remove the resource group you created in the previous blog post from your Azure account. We are completely recreating that entire resource group....but, as mentioned, we're adding the custom package. This way our default install will be Default Sitecore + the Module.
 
 #### Bootstrap Module ####
 The **Sitecore.Cloud.Integration.Bootload.wdp.zip** file was obtained from the Sitecore GitHub mentioned in this article: [Configure the Bootloader module for a Sitecore deployment ](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/configure_the_bootloader_module_for_a_sitecore_deployment).
@@ -209,7 +225,7 @@ In the next post, we will look at adding our own project's built code and items 
 
 
 
-4. ## Adding our project's code and items to the Azure Deployment
+## 4.  Adding our project's code and items to the Azure Deployment ##
 
 This is part 4 in my series of blog posts on Sitecore deployments on Azure. The other posts in this series can be found here:-
 
@@ -222,8 +238,11 @@ This is part 4 in my series of blog posts on Sitecore deployments on Azure. The 
 
 In the previous post, we setup a complete Sitecore Azure instance, adding some custom modules to the default install.
 
-Now we want to modify the scripts so that the compiled LaunchSitecore site is provisioned into the new XP environment that setup. To make this easy, we decided to use the MSDeploy package created during the VSO build (see part 1 in this series). This package contains all the compiled code for the site. The compiled code for the CM and CD should be exactly the same.
+Now we want to modify the scripts so that the compiled LaunchSitecore site is also provisioned into the new XP environment that setup. To make this easy, we decided to use the MSDeploy package created during the VSO build (see part 1 in this series). This package contains all the compiled code for the site. The compiled code for the CM and CD should be exactly the same.
  
+#### Cleanup Prior Post's Resource Group #### 
+First, make sure you remove the resource group you created in the previous blog post from your Azure account. We are completely recreating that entire resource group....but, as mentioned, we're adding our project's code into the mix (through the MSDeploy package our build created). This way our default install will be Default Sitecore + the Sitecore Package Deployer Module + the MSDeploy package from our project.
+
 Setting up the install script to push an MSDeploy package generated by a build server is relatively simple.
 
 #### Upload the custom scripts to allow for MSDeploy packages to be installed. ####
@@ -233,7 +252,7 @@ Place these in the same relative folder path (/xp/custom) so that the relative p
 ![Upload Scripts](./Images/CreateSitecoreFolderInBlobStorage.png?raw=true)
 
 #### Updating the deploy parameters
-The deploy script needs to be configured to deploy the MSDeploy package into the new instance using the "modules" confiuguration section of the **azuredeploy.aparameters.json** file. This is the same location that we adding the custom module, the Sitecore Package Deployer, in the previous post.
+The deploy script needs to be configured to deploy the MSDeploy package into the new instance using the "modules" confiuguration section of the **azuredeploy.parameters.json** file. This is the same location that we adding the custom module, the Sitecore Package Deployer, in the previous post.
 
     "modules": {
       "value": {
@@ -284,7 +303,7 @@ In the next post, we will go into Blue/Green deployments, utilizing an Azure 'st
 
 
 
-5. Deploying to a Slot
+## 5. Deploying to a Slot ##
 
 This is part 5 in my series of blog posts on Sitecore deployments on Azure. The other posts in this series can be found here:-
 
@@ -341,7 +360,7 @@ In the next post we will talk more about making this a 'true' blue green deploym
 
 
 
-6. True Blue Green Deployments for Sitecore on Azure
+## 6. True Blue Green Deployments for Sitecore on Azure ##
 (Yet to be fleshed out)
 
 
