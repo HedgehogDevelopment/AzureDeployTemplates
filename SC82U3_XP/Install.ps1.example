@@ -1,5 +1,7 @@
-﻿#Import the stuff we need 
-Import-Module AzureRM
+﻿﻿# Ensure your PowerShell environment is already configured on your system
+# Import-Module Azure -AllowClobber
+# Import-Module AzureRM -AllowClobber
+# Set-ExecutionPolicy Unrestricted
 
 #Point to the sitecore cloud tools on your local filesystem
 Import-Module c:\temp\SitecoreAzure\Tools\Sitecore.Cloud.Cmdlets.psm1

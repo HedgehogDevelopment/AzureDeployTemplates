@@ -1,4 +1,4 @@
-﻿# Ensure your PowerShell environment is already configured on your system
+﻿﻿# Ensure your PowerShell environment is already configured on your system
 # Import-Module Azure -AllowClobber
 # Import-Module AzureRM -AllowClobber
 # Set-ExecutionPolicy Unrestricted
