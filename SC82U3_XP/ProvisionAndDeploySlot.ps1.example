@@ -1,12 +1,15 @@
-﻿#Import the stuff we need 
-Import-Module AzureRM
+﻿# Ensure your PowerShell environment is already configured on your system
+# Import-Module Azure -AllowClobber
+# Import-Module AzureRM -AllowClobber
+# Set-ExecutionPolicy Unrestricted
 
 #Point to the sitecore cloud tools on your local filesystem
-Import-Module c:\temp\SitecoreAzure\Tools\Sitecore.Cloud.Cmdlets.psm1
+Import-Module "D:\_Sitecores_Azure\Toolkits\Sitecore Azure Toolkit 1.1 rev 170509\Tools\Sitecore.Cloud.Cmdlets.psm1" -Verbose
 
 #Add the azure account
 Add-AzureRmAccount
 
-$Name="[deployment name]"
+$Name="testlaunchsitecore824"
+# $Version = "1.0.0.1"
 
-Start-SitecoreAzureDeployment -Location "East US" -Name $Name -ArmTemplateUrl "https://????.blob.core.windows.net/sitecore/xp/azuredeploy.cd_slot.json" -ArmParametersPath ".\azuredeploy.parameters_slot.json" -LicenseXmlPath "????\license.xml" -Verbose
+Start-SitecoreAzureDeployment -Location "East US" -Name $Name -ArmTemplateUrl "https://sitecorepackages.blob.core.windows.net/scriptsv11/sitecore/xp/azuredeploy.cd_slot.json" -ArmParametersPath "D:\Github\AzureDeployTemplates\SC82U3_XP\azuredeploy.parameters_slot.json" -LicenseXmlPath "D:\Github\Sitecore-Azure-Quickstart-Templates\Sitecore 8.2.1\license.xml" -SetKeyValue @{ "deploymentId" = $Name } -Verbose

@@ -128,6 +128,19 @@ An alternative way of granting access to the ARM templates is to grant a Shared 
 
 Now you have the ARM templates in a storage container, and the packages also in a container, this should be everything you need to install the default XP instance in Sitecore Azure.
 
+### Preparing your local PowerShell Environment ###
+Be sure to prepare your local PowerShell correctly. Open PowerShell using Administrator priviledges, and make sure you have the [appropriate prerequisites installed/prepared](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/getting_started_with_sitecore_azure_toolkit).
+Be sure to install the Azure and AzureRm modules.
+   `Install-Module Azure -AllowClobber`
+   `Install-Module AzureRM -AllowClobber`
+
+Allow PowerShell to have the correct Execution Policy to run scripts.
+    `Set-ExecutionPolicy Unrestricted`
+
+Note that once you have the Azure and AzureRm PowerShell modules installed into your system, they are on the local machine....so future attempts won't require you to reinstall it.
+
+Unblock, and Unzip the Azure Toolkit v1.1 to your system, noting the path, which can be pasted into the Install.ps1 script mentioned below.
+
 ### Running the install script
 An install script called **Install.ps1.example** has been included in our [GitHub](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/SC82U3_XP/Install.ps1.example). This will need to be renamed to **Install.ps1** and modified slightly to contain paths to your Sitecore license file, [Sitecore Azure Toolkit](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/deployment/getting_started_with_sitecore_azure_toolkit) and the ArmTemplateUrl described above. If you went with Option 2 for getting the URLs for the ARM templates, you may also need to modify the script to pass in the appropriate parameters as well.
 
