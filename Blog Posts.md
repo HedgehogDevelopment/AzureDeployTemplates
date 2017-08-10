@@ -195,14 +195,14 @@ Using the above Cmdlet, create the scwdp.zip package from your update or zip pac
 Note: For more advanced scenarios, you can modify the output module package as described by the [Sitecore documentation](https://doc.sitecore.net/cloud/working_with_sitecore_azure_toolkit/packaging/the_web_deploy_packages_for_a_module). This can allow you to apply transformations, embed files, adjust parameters etc. as needed for a more complex package and deployment.
 
 ##### Option 2: Manually Create the Package #####
-Initially, when attempting to take the Sitecore Package Deployer module's update file, and using these commands on it, I found that the toolkit didn't correct package up the module. It seems as those these commands work find on the basic Sitecore modules (WFFM, EXM, SXA etc.) but not for any other modules.
+Initially, when attempting to take the Sitecore Package Deployer module's update file, and using these commands on it, I had issues with custom modules. It seemed as those these commands work on the basic Sitecore modules (WFFM, EXM, SXA etc.) but sometimes not for any other modules.
 
 To get around this, I copied the package for the bootloader, unzipped it...and kept the same structure inside. I then copied over the Sitecore Package Deployer files into that directory.
 Then I zipped it up, and renamed it to .scwdp.zip. Simple!
 We've uploaded the resulting scwdp.zip file to our Github repo, here. [https://github.com/HedgehogDevelopment/AzureDeployTemplates/tree/master/sitecore/SitecorePackageDeployer/SitecorePackageDeployer-1.8.scwdp.zip]
 
 
-Once you have a properly build scwdp.zip package, upload it to your online blob storage container like the other packages.
+Once you have a properly built scwdp.zip package, upload it to your online blob storage container like the other packages.
 
 #### Sitecore Package Deployer Configuration ####
 The module requires some configuration for itself. As we can see, the bootloader also comes with a .json file (addons/bootloader.json).
@@ -343,7 +343,7 @@ This is part 5 in my series of blog posts on Sitecore deployments on Azure. The 
 5. Deploying to a Slot [this]
 6. True Blue Green Deployments for Sitecore on Azure [Link]
 
-In the previous post, we setup have our complete Sitecore Azure setup, including a custom module and our initial project included.
+In the previous post, we setup our complete Sitecore Azure setup, including a custom module and our initial project included.
 
 At this point, we want to setup Azure staging slots, so the next release of our project can go there. This allows up to deploy the new code to a private website (the slot), and test it out, before pushing it live for the public to see.
 We are going to script this, to make this really easy for the devops team to automate. The following tasks need to be performed:
@@ -363,16 +363,16 @@ Using the file **azuredeploy.parameters_slot.json.example** [https://github.com/
 
 The **azuredeploy.parameters_slot.json** should be updated to point at a new MSDeploy package for the instance of Launch Sitecore you are deploying. This will push a new version of the code.
 
-As with the earlier posts, take the _cdslot configuration files for the bootloader [https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/custom/bootloader_cdslot.json], SitecorePackageDeployer [https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/SitecorePackageDeployer/SitecorePackageDeployer.azuredeploy_cdslot.json] and the InstallMSDeployPackage [https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/custom/InstallMSDeployPackage.azuredeploy_cdslot.json] and upload them into your Blob Storage.
+As with the earlier posts, take the _cdslot configuration files for [the bootloader](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/custom/bootloader_cdslot.json), [SitecorePackageDeployer](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/SitecorePackageDeployer/SitecorePackageDeployer.azuredeploy_cdslot.json) and the [InstallMSDeployPackage](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/custom/InstallMSDeployPackage.azuredeploy_cdslot.json) and upload them into your Blob Storage.
 
 You then need to get the public URLs for these files, and add them into your azuredeploy.parameters_slot.json file, mentioned above.
 
 #### The CD Slot Arm Template
-Now upload the main azuredeploy slot template [https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/azuredeploy.cd_slot.json] to your blob storage. (remember to keep the same relative path to the other arm template files as it is in our Github repo).
+Now upload the main [azuredeploy slot template](https://github.com/HedgehogDevelopment/AzureDeployTemplates/blob/master/sitecore/xp/azuredeploy.cd_slot.json) to your blob storage. (remember to keep the same relative path to the other arm template files as it is in our Github repo).
 
 
-### The Powershell scripts
-The powershell script to install the deployment slot is very similar to the script used to install the original instance, instead it uses the azuredeploy_cdslot template instead. 
+### The PowerShell scripts
+The powershell script to install the deployment slot is very similar to the script used to install the original instance, but it uses the azuredeploy_cdslot template instead. 
 The example script is called **ProvisionAndDeploySlot.ps1.example**. You should update the parameters to point to your Sitecore installation and execute the powershell script. This will install a slot called "cd_staging" in your azure web instance, along with the new version of the LaunchSitecore site (rememeber you updated the package path to the new MSDeploy package).
 
 Once run, this entire Staging slot is provisioned with a clean version of the code from the new release. It is currently using the same databases as production though (more on that in the next post), but it is kept private, allowing us to test the new code out to see how our site looks, before affected any of our public users.
